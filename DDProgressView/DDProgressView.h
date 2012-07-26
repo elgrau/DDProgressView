@@ -21,9 +21,9 @@
     UIColor *emptyColor ;
 }
 
-@property (nonatomic,retain) UIColor *innerColor ;
-@property (nonatomic,retain) UIColor *outerColor ;
-@property (nonatomic,retain) UIColor *emptyColor ;
+@property (nonatomic) UIColor *innerColor ;
+@property (nonatomic) UIColor *outerColor ;
+@property (nonatomic) UIColor *emptyColor ;
 @property (nonatomic,assign) float progress ;
 @property (nonatomic,assign) BOOL useRoundedCorners ;
 

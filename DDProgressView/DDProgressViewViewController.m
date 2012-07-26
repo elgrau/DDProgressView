@@ -11,10 +11,6 @@
 
 @implementation DDProgressViewViewController
 
-- (void)dealloc
-{
-    [super dealloc] ;
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -34,14 +30,14 @@
 	[progressView setOuterColor: [UIColor grayColor]] ;
 	[progressView setInnerColor: [UIColor lightGrayColor]] ;
 	[self.view addSubview: progressView] ;
-	[progressView release] ;
+    
     
     progressView2 = [[DDProgressView alloc] initWithFrame: CGRectMake(20.0f, 180.0f, self.view.bounds.size.width-40.0f, 0.0f)] ;
     [progressView2 setOuterColor: [UIColor clearColor]] ;
     [progressView2 setInnerColor: [UIColor lightGrayColor]] ;
     [progressView2 setEmptyColor: [UIColor darkGrayColor]] ;
     [self.view addSubview: progressView2] ;
-    [progressView2 release] ;
+    
 	
 	// set a timer that updates the progress
 	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval: 0.03f target: self selector: @selector(updateProgress) userInfo: nil repeats: YES] ;

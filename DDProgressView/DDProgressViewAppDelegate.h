@@ -15,7 +15,7 @@
     
 }
 
-@property (nonatomic, retain) IBOutlet UIWindow *window ;
-@property (nonatomic, retain) IBOutlet DDProgressViewViewController *viewController ;
+@property (strong, nonatomic) IBOutlet UIWindow *window ;
+@property (strong, nonatomic) IBOutlet DDProgressViewViewController *viewController ;
 
 @end

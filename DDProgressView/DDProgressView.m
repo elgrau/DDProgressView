@@ -40,15 +40,6 @@
 	return self ;
 }
 
-- (void)dealloc
-{
-	[innerColor release], innerColor = nil ;
-	[outerColor release], outerColor = nil ;
-	[emptyColor release], emptyColor = nil ;
-	
-	[super dealloc] ;
-}
-
 - (void)setProgress:(float)theProgress
 {
 	// make sure the user does not try to set the progress outside of the bounds

@@ -7,17 +7,26 @@
 //
 
 #import "DDProgressView.h"
+#import "DDProgressBar.h"
 
 #define kProgressBarHeight  22.0f
 #define kProgressBarWidth	160.0f
 
-@implementation DDProgressView
+@interface DDProgressView()
 
-@synthesize innerColor ;
-@synthesize outerColor ;
-@synthesize emptyColor ;
-@synthesize progress ;
-@synthesize useRoundedCorners ;
+@property (nonatomic, strong) DDProgressBar *defaultProgressBar;
+@property (nonatomic, strong) NSMutableDictionary *progressBars;
+@property (nonatomic, strong) NSMutableArray *progressBarsKeys;
+
+@end
+
+@implementation DDProgressView
+@synthesize defaultProgressBar = _defaultProgressBar;
+@synthesize progressBars = _progressBars;
+@synthesize progressBarsKeys = _progressBarsKeys;
+@synthesize outerColor = _outerColor;
+@synthesize emptyColor = _emptyColor;
+@synthesize useRoundedCorners = _useRoundedCorners;
 
 - (id)init
 {
@@ -29,8 +38,13 @@
 	self = [super initWithFrame: frame] ;
 	if (self)
 	{
+        _defaultProgressBar = [[DDProgressBar alloc] init];
+        _progressBars = [NSMutableDictionary dictionary];
+        _progressBarsKeys = [NSMutableArray array];
+        
+        _defaultProgressBar.color = [UIColor lightGrayColor];
+        
 		self.backgroundColor = [UIColor clearColor] ;
-		self.innerColor = [UIColor lightGrayColor] ;
 		self.outerColor = [UIColor lightGrayColor] ;
 		self.emptyColor = [UIColor clearColor] ;
         self.useRoundedCorners = NO;
@@ -40,15 +54,53 @@
 	return self ;
 }
 
-- (void)setProgress:(float)theProgress
+-(void)addProgressBarWithName:(NSString *)name andColor:(UIColor *)color withProgress:(float)progress
 {
-	// make sure the user does not try to set the progress outside of the bounds
-	if (theProgress > 1.0f)
-		theProgress = 1.0f ;
-	if (theProgress < 0.0f)
-		theProgress = 0.0f ;
-	
-	progress = theProgress ;
+    DDProgressBar *progressBar = [_progressBars objectForKey:name];
+    
+    if (!progressBar) {
+        progressBar = [[DDProgressBar alloc] init];        
+        [_progressBars setObject:progressBar forKey:name];
+        [_progressBarsKeys addObject:name];
+    } 
+    progressBar.color = color;
+    progressBar.progress = progress;        
+    
+    [self setNeedsDisplay];
+}
+
+-(void)removeProgressBarWithName:(NSString *)name
+{
+    DDProgressBar *progressBar = [_progressBars objectForKey:name];
+    
+    if (progressBar) {
+        [_progressBars removeObjectForKey:name];
+        [_progressBarsKeys removeObject:name];
+    } 
+    
+    [self setNeedsDisplay];
+}
+
+- (void)setProgress:(float)progress
+{
+    _defaultProgressBar.progress = progress;
+    
+	[self setNeedsDisplay] ;
+}
+
+- (void)setProgress:(float)progress forProgressBarWithName:(NSString *)name
+{
+    DDProgressBar *progressBar = [_progressBars objectForKey:name];
+    
+    if (progressBar) {
+        progressBar.progress = progress;        
+        [self setNeedsDisplay] ;
+    }
+}
+
+- (void)setInnerColor:(UIColor *)color
+{
+    _defaultProgressBar.color = color;    
 	[self setNeedsDisplay] ;
 }
 
@@ -66,6 +118,29 @@
 	[super setBounds: bounds] ;
 }
 
+- (void)drawProgressBar:(DDProgressBar *)progressBar withRect:(CGRect)rect andRadius:(CGFloat)radius inContext:(CGContextRef)context
+{
+    // draw the empty rounded rectangle (shown for the "unfilled" portions of the progress
+    //CGRect rect = CGRectInset(rect, 3.0f, 3.0f) ;	
+    //CGFloat radius = self.useRoundedCorners? 0.5f * rect.size.height : 0 ;
+    
+    /*rect.size.width *= progressBar.progress ;
+    if (rect.size.width < 2 * radius)
+        rect.size.width = 2 * radius ;
+    */
+    [progressBar.color setFill] ;
+    
+    CGContextBeginPath(context) ;
+    CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMidY(rect)) ;
+    CGContextAddArcToPoint(context, CGRectGetMinX(rect), CGRectGetMinY(rect), CGRectGetMidX(rect), CGRectGetMinY(rect), radius) ;
+    CGContextAddArcToPoint(context, CGRectGetMaxX(rect), CGRectGetMinY(rect), CGRectGetMaxX(rect), CGRectGetMidY(rect), radius) ;
+    CGContextAddArcToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect), CGRectGetMidX(rect), CGRectGetMaxY(rect), radius) ;
+    CGContextAddArcToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect), CGRectGetMinX(rect), CGRectGetMidY(rect), radius) ;
+    CGContextClosePath(context) ;
+    CGContextFillPath(context) ;
+    
+}
+
 - (void)drawRect:(CGRect)rect
 {
 	CGContextRef context = UIGraphicsGetCurrentContext() ;
@@ -80,7 +155,7 @@
 	rect = CGRectInset(rect, 1.0f, 1.0f) ;
 	CGFloat radius = self.useRoundedCorners? 0.5f * rect.size.height : 0 ;
     
-	[outerColor setStroke] ;
+	[_outerColor setStroke] ;
 	CGContextSetLineWidth(context, 2.0f) ;
 	
 	CGContextBeginPath(context) ;
@@ -96,7 +171,7 @@
     rect = CGRectInset(rect, 3.0f, 3.0f) ;
 	radius = self.useRoundedCorners? 0.5f * rect.size.height : 0 ;
 	
-	[emptyColor setFill] ;
+	[_emptyColor setFill] ;
 	
 	CGContextBeginPath(context) ;
 	CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMidY(rect)) ;
@@ -106,25 +181,29 @@
 	CGContextAddArcToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect), CGRectGetMinX(rect), CGRectGetMidY(rect), radius) ;
 	CGContextClosePath(context) ;
 	CGContextFillPath(context) ;
-    	
-	// make sure the filled rounded rectangle is not smaller than 2 times the radius
-	rect.size.width *= progress ;
-	if (rect.size.width < 2 * radius)
-		rect.size.width = 2 * radius ;
-	
-	[innerColor setFill] ;
-	
-	CGContextBeginPath(context) ;
-	CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMidY(rect)) ;
-	CGContextAddArcToPoint(context, CGRectGetMinX(rect), CGRectGetMinY(rect), CGRectGetMidX(rect), CGRectGetMinY(rect), radius) ;
-	CGContextAddArcToPoint(context, CGRectGetMaxX(rect), CGRectGetMinY(rect), CGRectGetMaxX(rect), CGRectGetMidY(rect), radius) ;
-	CGContextAddArcToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect), CGRectGetMidX(rect), CGRectGetMaxY(rect), radius) ;
-	CGContextAddArcToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect), CGRectGetMinX(rect), CGRectGetMidY(rect), radius) ;
-	CGContextClosePath(context) ;
-	CGContextFillPath(context) ;
-	
-	// restore the context
-	CGContextRestoreGState(context) ;
+    
+    rect.size.width *= _defaultProgressBar.progress ;
+    if (rect.size.width < 2 * radius)
+        rect.size.width = 2 * radius ;
+
+    [self drawProgressBar:_defaultProgressBar withRect:rect andRadius:radius inContext:context];
+        
+    if (_progressBars.count > 0) {        
+        NSEnumerator *keyEnumerator = [_progressBarsKeys objectEnumerator];
+        for (NSString *key in keyEnumerator) {
+            
+            DDProgressBar *progressBar = [_progressBars objectForKey:key];
+            
+            rect.size.width *= progressBar.progress ;
+            if (rect.size.width < 2 * radius)
+                rect.size.width = 2 * radius ;
+            
+            [self drawProgressBar:progressBar withRect:rect andRadius:radius inContext:context];
+        }
+    }
+    
+    // restore the context
+    CGContextRestoreGState(context) ;
 }
 
 @end

@@ -17,6 +17,7 @@
 		6DA2E7F7132D6DC100985306 /* DDProgressViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA2E7F6132D6DC100985306 /* DDProgressViewViewController.m */; };
 		6DA2E7FA132D6DC100985306 /* DDProgressViewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DA2E7F8132D6DC100985306 /* DDProgressViewViewController.xib */; };
 		6DA2E802132D6E2E00985306 /* DDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DA2E801132D6E2D00985306 /* DDProgressView.m */; };
+		DD0477D815C1B7B900124851 /* DDProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = DD0477D715C1B7B900124851 /* DDProgressBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,8 @@
 		6DA2E801132D6E2D00985306 /* DDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDProgressView.m; sourceTree = "<group>"; };
 		DA8635BA136EEA8000776109 /* AppKitCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppKitCompatibility.h; sourceTree = "<group>"; };
 		DA8635BB136EEA8000776109 /* AppKitCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppKitCompatibility.m; sourceTree = "<group>"; };
+		DD0477D615C1B7B900124851 /* DDProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDProgressBar.h; sourceTree = "<group>"; };
+		DD0477D715C1B7B900124851 /* DDProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDProgressBar.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,8 @@
 			children = (
 				DA8635BA136EEA8000776109 /* AppKitCompatibility.h */,
 				DA8635BB136EEA8000776109 /* AppKitCompatibility.m */,
+				DD0477D615C1B7B900124851 /* DDProgressBar.h */,
+				DD0477D715C1B7B900124851 /* DDProgressBar.m */,
 				6DA2E800132D6E2D00985306 /* DDProgressView.h */,
 				6DA2E801132D6E2D00985306 /* DDProgressView.m */,
 				6DA2E7EF132D6DC100985306 /* DDProgressViewAppDelegate.h */,
@@ -177,6 +182,7 @@
 				6DA2E7F1132D6DC100985306 /* DDProgressViewAppDelegate.m in Sources */,
 				6DA2E7F7132D6DC100985306 /* DDProgressViewViewController.m in Sources */,
 				6DA2E802132D6E2E00985306 /* DDProgressView.m in Sources */,
+				DD0477D815C1B7B900124851 /* DDProgressBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

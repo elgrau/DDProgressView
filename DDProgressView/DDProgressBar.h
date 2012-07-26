@@ -10,4 +10,7 @@
 
 @interface DDProgressBar : NSObject
 
+@property (nonatomic) UIColor *color;
+@property (nonatomic) float progress;
+
 @end

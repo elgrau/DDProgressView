@@ -13,18 +13,18 @@
 #endif
 
 @interface DDProgressView : UIView
-{
-@private
-	float progress ;
-	UIColor *innerColor ;
-	UIColor *outerColor ;
-    UIColor *emptyColor ;
-}
 
-@property (nonatomic) UIColor *innerColor ;
+//@property (nonatomic) UIColor *innerColor ;
 @property (nonatomic) UIColor *outerColor ;
 @property (nonatomic) UIColor *emptyColor ;
-@property (nonatomic,assign) float progress ;
-@property (nonatomic,assign) BOOL useRoundedCorners ;
+//@property (nonatomic) float progress ;
+@property (nonatomic) BOOL useRoundedCorners ;
+
+
+-(void)addProgressBarWithName:(NSString *)name andColor:(UIColor *)color withProgress:(float)progress;
+-(void)removeProgressBarWithName:(NSString *)name;
+- (void)setProgress:(float)progress forProgressBarWithName:(NSString *)name;
+- (void)setProgress:(float)progress;
+- (void)setInnerColor:(UIColor *)color;
 
 @end

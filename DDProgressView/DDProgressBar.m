@@ -9,5 +9,19 @@
 #import "DDProgressBar.h"
 
 @implementation DDProgressBar
+@synthesize color = _color;
+@synthesize progress = _progress;
+
+
+-(void)setProgress:(float)progress
+{
+    if (progress > 1.0f)
+		progress = 1.0f ;
+	if (progress < 0.0f)
+		progress = 0.0f ;
+    
+    _progress = progress;
+
+}
 
 @end

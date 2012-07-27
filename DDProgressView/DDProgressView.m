@@ -18,6 +18,8 @@
 @property (nonatomic, strong) NSMutableDictionary *progressBars;
 @property (nonatomic, strong) NSMutableArray *progressBarsKeys;
 
+-(void)setupView;
+
 @end
 
 @implementation DDProgressView
@@ -38,20 +40,38 @@
 	self = [super initWithFrame: frame] ;
 	if (self)
 	{
-        _defaultProgressBar = [[DDProgressBar alloc] init];
-        _progressBars = [NSMutableDictionary dictionary];
-        _progressBarsKeys = [NSMutableArray array];
-        
-        _defaultProgressBar.color = [UIColor lightGrayColor];
-        
-		self.backgroundColor = [UIColor clearColor] ;
-		self.outerColor = [UIColor lightGrayColor] ;
-		self.emptyColor = [UIColor clearColor] ;
-        self.useRoundedCorners = NO;
-		if (frame.size.width == 0.0f)
-			frame.size.width = kProgressBarWidth ;
+        [self setupView];
 	}
 	return self ;
+}
+
+- (id) initWithCoder:(NSCoder *)aDecoder
+{
+	self = [super initWithCoder:aDecoder] ;
+	if (self)
+	{
+        [self setupView];
+	}
+	return self ;
+}
+
+-(void)setupView
+{
+    _defaultProgressBar = [[DDProgressBar alloc] init];
+    _progressBars = [NSMutableDictionary dictionary];
+    _progressBarsKeys = [NSMutableArray array];
+    
+    _defaultProgressBar.color = [UIColor lightGrayColor];
+    
+    self.backgroundColor = [UIColor clearColor] ;
+    self.outerColor = [UIColor lightGrayColor] ;
+    self.emptyColor = [UIColor clearColor] ;
+    self.useRoundedCorners = NO;
+    if (self.frame.size.width == 0.0f) {
+        CGRect frame = self.frame;
+        frame.size.width = kProgressBarWidth ;
+        self.frame = frame;
+    }        
 }
 
 -(void)addProgressBarWithName:(NSString *)name andColor:(UIColor *)color withProgress:(float)progress

@@ -139,6 +139,25 @@
     }
 }
 
+-(void)increaseProgress:(float)progress
+{
+    [_defaultProgressBar increaseProgress:progress];
+    
+  	[self setNeedsDisplay] ;
+}
+
+-(void)increaseProgress:(float)progress forProgressBarWithName:(NSString *)name
+{
+    DDProgressBar *progressBar = [_progressBars objectForKey:name];
+    
+    if (progressBar) {
+        [progressBar increaseProgress:progress];        
+        [self setNeedsDisplay] ;
+    }
+}
+
+
+
 - (void)setInnerColor:(UIColor *)color
 {
     _defaultProgressBar.color = color;    

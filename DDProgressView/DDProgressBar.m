@@ -52,6 +52,11 @@
     _progress = progress;
 }
 
+-(void)increaseProgress:(float)progress
+{
+    self.progress = _progress + progress;
+}
+
 -(CGFloat)valueForDrawing
 {
     if (_maxValue > _minValue) {

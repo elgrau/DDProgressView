@@ -27,7 +27,8 @@
 //-(void)addProgressBarWithName:(NSString *)name andColor:(UIColor *)color withProgress:(float)progress;
 -(void)removeProgressBarWithName:(NSString *)name;
 - (void)setProgress:(float)progress forProgressBarWithName:(NSString *)name;
-- (void)setProgress:(float)progress;
+- (void)increaseProgress:(float)progress;
+-(void)increaseProgress:(float)progress forProgressBarWithName:(NSString *)name;
 - (void)setMinValue:(float)minValue;
 - (void)setMaxValue:(float)maxValue;
 - (void)setInnerColor:(UIColor *)color;

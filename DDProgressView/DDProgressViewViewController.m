@@ -69,7 +69,8 @@
     
 	progressView.progress = progressValues[0];
     [progressView setProgress:progressValues[1] forProgressBarWithName:@"Second"] ;
-    [progressView setProgress:progressValues[2] forProgressBarWithName:@"Third"] ;
+    //[progressView setProgress:progressValues[2] forProgressBarWithName:@"Third"] ;
+    [progressView increaseProgress:(1 * progressDir) forProgressBarWithName:@"Third"];
     
     progressView2.progress = progressValues[0];
     

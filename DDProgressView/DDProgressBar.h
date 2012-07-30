@@ -21,4 +21,5 @@
 -(id)initWithName:(NSString *)name color:(UIColor *)color;
 -(id)initWithName:(NSString *)name color:(UIColor *)color minValue:(CGFloat)minValue andMaxValue:(CGFloat)maxValue;
 -(CGFloat)valueForDrawing;
+-(void)increaseProgress:(float)progress;
 @end

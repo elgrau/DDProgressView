@@ -11,20 +11,25 @@
 #elif TARGET_OS_MAC
 #import "AppKitCompatibility.h"
 #endif
+#import "DDProgressBar.h"
 
 @interface DDProgressView : UIView
 
 //@property (nonatomic) UIColor *innerColor ;
-@property (nonatomic) UIColor *outerColor ;
-@property (nonatomic) UIColor *emptyColor ;
-//@property (nonatomic) float progress ;
-@property (nonatomic) BOOL useRoundedCorners ;
+@property (nonatomic) UIColor *outerColor;
+@property (nonatomic) UIColor *emptyColor;
+@property (nonatomic) BOOL useRoundedCorners;
+@property (nonatomic) float progress;
+@property (nonatomic) float minValue;
+@property (nonatomic) float maxValue;
 
-
--(void)addProgressBarWithName:(NSString *)name andColor:(UIColor *)color withProgress:(float)progress;
+-(void)addProgressBar:(DDProgressBar *)progressBar;
+//-(void)addProgressBarWithName:(NSString *)name andColor:(UIColor *)color withProgress:(float)progress;
 -(void)removeProgressBarWithName:(NSString *)name;
 - (void)setProgress:(float)progress forProgressBarWithName:(NSString *)name;
 - (void)setProgress:(float)progress;
+- (void)setMinValue:(float)minValue;
+- (void)setMaxValue:(float)maxValue;
 - (void)setInnerColor:(UIColor *)color;
 
 @end

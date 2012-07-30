@@ -10,7 +10,15 @@
 
 @interface DDProgressBar : NSObject
 
-@property (nonatomic) UIColor *color;
+@property (nonatomic, copy) UIColor *color;
+@property (nonatomic, copy) NSString *name;
 @property (nonatomic) float progress;
+@property (nonatomic) float maxValue;
+@property (nonatomic) float minValue;
 
+
+-(id)initWithName:(NSString *)name;
+-(id)initWithName:(NSString *)name color:(UIColor *)color;
+-(id)initWithName:(NSString *)name color:(UIColor *)color minValue:(CGFloat)minValue andMaxValue:(CGFloat)maxValue;
+-(CGFloat)valueForDrawing;
 @end

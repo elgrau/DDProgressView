@@ -8,6 +8,7 @@
 
 #import "DDProgressViewViewController.h"
 #import "DDProgressView.h"
+#import "DDProgressBar.h"
 
 @interface DDProgressViewViewController() {
     float progressValues[3];
@@ -37,9 +38,14 @@
     progressView.useRoundedCorners = YES;
 	[progressView setOuterColor: [UIColor grayColor]];
 	[progressView setInnerColor: [UIColor lightGrayColor]] ;
+
+    DDProgressBar *secondProgressBar = [[DDProgressBar alloc] initWithName:@"Second" color:[UIColor cyanColor] minValue:0.0 andMaxValue:100.0];
     
-    [progressView addProgressBarWithName:@"Second" andColor:[UIColor cyanColor] withProgress:progressValues[1]];
-    [progressView addProgressBarWithName:@"Third" andColor:[UIColor redColor] withProgress:progressValues[2]];
+    DDProgressBar *thirdProgressBar = [[DDProgressBar alloc] initWithName:@"Third" color:[UIColor redColor] minValue:0.0 andMaxValue:200.0];
+        
+    [progressView addProgressBar:secondProgressBar];
+    [progressView addProgressBar:thirdProgressBar];
+        
 	[self.view addSubview: progressView] ;
     
     
@@ -58,17 +64,18 @@
 - (void)updateProgress
 {
     progressValues[0] += (0.01f * progressDir);
-    progressValues[1] += (0.005f * progressDir);
-    progressValues[2] += (0.003f * progressDir);
+    progressValues[1] += (0.5f * progressDir);
+    progressValues[2] += (1 * progressDir);
     
-	[progressView setProgress:progressValues[0]];
+	progressView.progress = progressValues[0];
     [progressView setProgress:progressValues[1] forProgressBarWithName:@"Second"] ;
     [progressView setProgress:progressValues[2] forProgressBarWithName:@"Third"] ;
     
-    [progressView2 setProgress: progressValues[0]];
+    progressView2.progress = progressValues[0];
     
-    if (progressValues[0] > 1 || progressValues[0] < 0)
+    if (progressValues[0] > progressView.maxValue || progressValues[0] < progressView.minValue)
         progressDir *= -1 ;
+    
 }
 
 - (void)viewDidUnload

@@ -7,7 +7,6 @@
 //
 
 #import "DDProgressView.h"
-#import "DDProgressBar.h"
 
 #define kProgressBarHeight  22.0f
 #define kProgressBarWidth	160.0f
@@ -29,6 +28,7 @@
 @synthesize outerColor = _outerColor;
 @synthesize emptyColor = _emptyColor;
 @synthesize useRoundedCorners = _useRoundedCorners;
+
 
 - (id)init
 {
@@ -74,19 +74,15 @@
     }        
 }
 
--(void)addProgressBarWithName:(NSString *)name andColor:(UIColor *)color withProgress:(float)progress
+
+-(void)addProgressBar:(DDProgressBar *)progressBar
 {
-    DDProgressBar *progressBar = [_progressBars objectForKey:name];
-    
-    if (!progressBar) {
-        progressBar = [[DDProgressBar alloc] init];        
-        [_progressBars setObject:progressBar forKey:name];
-        [_progressBarsKeys addObject:name];
+    if (progressBar && [progressBar.name length]>0 && ![[_progressBars allKeys] containsObject:progressBar.name]) {
+        [_progressBars setObject:progressBar forKey:progressBar.name];
+        [_progressBarsKeys addObject:progressBar.name];
+        
+        [self setNeedsDisplay];
     } 
-    progressBar.color = color;
-    progressBar.progress = progress;        
-    
-    [self setNeedsDisplay];
 }
 
 -(void)removeProgressBarWithName:(NSString *)name
@@ -99,6 +95,31 @@
     } 
     
     [self setNeedsDisplay];
+}
+
+-(float)minValue
+{
+    return _defaultProgressBar.minValue;
+}
+
+- (void)setMinValue:(float)minValue
+{
+    _defaultProgressBar.minValue = minValue;
+}
+
+-(float)maxValue
+{
+    return _defaultProgressBar.maxValue;
+}
+
+- (void)setMaxValue:(float)maxValue
+{
+    _defaultProgressBar.maxValue = maxValue;
+}
+
+-(float)progress
+{
+    return _defaultProgressBar.progress;
 }
 
 - (void)setProgress:(float)progress
@@ -140,14 +161,6 @@
 
 - (void)drawProgressBar:(DDProgressBar *)progressBar withRect:(CGRect)rect andRadius:(CGFloat)radius inContext:(CGContextRef)context
 {
-    // draw the empty rounded rectangle (shown for the "unfilled" portions of the progress
-    //CGRect rect = CGRectInset(rect, 3.0f, 3.0f) ;	
-    //CGFloat radius = self.useRoundedCorners? 0.5f * rect.size.height : 0 ;
-    
-    /*rect.size.width *= progressBar.progress ;
-    if (rect.size.width < 2 * radius)
-        rect.size.width = 2 * radius ;
-    */
     [progressBar.color setFill] ;
     
     CGContextBeginPath(context) ;
@@ -202,11 +215,13 @@
 	CGContextClosePath(context) ;
 	CGContextFillPath(context) ;
     
-    rect.size.width *= _defaultProgressBar.progress ;
+    rect.size.width *= [_defaultProgressBar valueForDrawing] ;
     if (rect.size.width < 2 * radius)
         rect.size.width = 2 * radius ;
 
-    [self drawProgressBar:_defaultProgressBar withRect:rect andRadius:radius inContext:context];
+    if (_defaultProgressBar.progress > _defaultProgressBar.minValue) {    
+        [self drawProgressBar:_defaultProgressBar withRect:rect andRadius:radius inContext:context];
+    }
         
     if (_progressBars.count > 0) {        
         NSEnumerator *keyEnumerator = [_progressBarsKeys objectEnumerator];
@@ -214,11 +229,13 @@
             
             DDProgressBar *progressBar = [_progressBars objectForKey:key];
             
-            rect.size.width *= progressBar.progress ;
-            if (rect.size.width < 2 * radius)
-                rect.size.width = 2 * radius ;
-            
-            [self drawProgressBar:progressBar withRect:rect andRadius:radius inContext:context];
+            if (progressBar.progress > progressBar.minValue) {            
+                rect.size.width *= [progressBar valueForDrawing] ;
+                if (rect.size.width < 2 * radius)
+                    rect.size.width = 2 * radius ;
+                
+                [self drawProgressBar:progressBar withRect:rect andRadius:radius inContext:context];
+            }
         }
     }
     
